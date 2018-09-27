@@ -3,9 +3,18 @@ import Search from './Search'
 
 const getWeather = function(city) {
   let cityURL = city.split(' ').join('%20')
-  fetch(`http://api.openweathermap.org/data/2.5/weather?q=${cityURL}&appid=${process.env.REACT_APP_WEATHERAPI}`)
+  fetch(`http://api.openweathermap.org/data/2.5/weather?q=${cityURL}&units=imperial&appid=${process.env.REACT_APP_WEATHERAPI}`)
   .then(resp => resp.json())
-  .then(data => console.log(data))
+  .then(data => {
+    console.log("The weather in: " + data.name)
+    console.log(data.weather[0].main);
+    console.log("The Tempurature is: " + data.main.temp);
+  })
+  fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${cityURL}&units=imperial&appid=${process.env.REACT_APP_WEATHERAPI}`)
+  .then(resp => resp.json())
+  .then(data => {
+    console.log(data)
+  })
 }
 
 
@@ -28,7 +37,9 @@ export default class Home extends Component {
   // state = {
   //   findCity: 
   // // }
-
+  state={
+    search:""
+  }
   getUserLocation = () => {
     console.log('HitgetUserLocation');
     
@@ -50,22 +61,26 @@ export default class Home extends Component {
   
   handleSubmit = (event) => {
     event.preventDefault();
-    let city = event.target.value;
-    console.log(city);
+    let city = this.state.search;
+    console.log("submit:",city);
+    event.target.reset()
     
     getWeather(city);
   }
-
-  // componentDidMount() {
-  //   this.getUserLocation()
-  // }
+  
+  handleChange = (event) => {
+    // console.log(event.target.value)
+    this.setState({
+      search:event.target.value
+    })
+  }
 
   render() {
     
     return (
       <div>
         <button onClick={this.getUserLocation}>Get the Address</button>
-        <Search onSubmit={this.handleSubmit}/>
+        <Search handleSubmit={this.handleSubmit} search={this.state.search} handleChange={this.handleChange}/>
       </div>
     )
   }

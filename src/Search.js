@@ -1,11 +1,15 @@
-import React, { Component } from 'react'
+import React from 'react'
 
-export default class Search extends Component {
-  render() {
-    return (
-      <div>
-        <input onSubmit={this.handleSubmit}></input>
-      </div>
-    )
-  }
+
+const Search = (props) => {
+  return (
+    <div>
+      <form  onSubmit={props.handleSubmit}>
+      <input type="text"  onChange={props.handleChange} />
+      <input type="submit"/>
+      </form>
+    </div>
+  )
 }
+
+export default Search
